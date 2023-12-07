@@ -1,7 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html>
@@ -9,6 +7,10 @@
 <meta charset="ISO-8859-1">
 <title>Admin Dashboard</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -58,17 +60,50 @@ th {
 	color: #fff;
 }
 
+.vertical-divider {
+            width: 1px;
+            height: 35px;
+            background-color: #e0e0e0;
+            margin: 0 15px;
+        }
+        
+.navbar-brand {
+    color: inherit;
+}        
 </style>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+ <span class="navbar-brand mb-0 h1">ADMIN DASHBOARD</span>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="vertical-divider"></div>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="initialize">Initialize the Database</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+		  <a class="dropdown-item" href="#" id="bigClientsLink">Big Clients</a>
+          <a class="dropdown-item" href="#" id="easyClientslink">Easy Clients</a>
+          <a class="dropdown-item" href="#" id="oneTreeQuoteslink">One tree Quotes</a>
+          <a class="dropdown-item" href="#" id="prospectiveClientslink">Prospective Clients</a>
+          <a class="dropdown-item" href="#" id="highestTreelink">Highest Tree</a>
+        </div>
+      </li>
+    </ul>
+      <ul class="navbar-nav ms-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="login.jsp">Logout</a>
+      </li>
+      </ul>
+  </div>
+</nav>
 		<div class="container">
-		<br>
 		<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">Welcome, Admin!</h1>
-		<br>
-		<br>
-		<a class="btn btn-primary action-btn" href="initialize">Initialize the Database</a> 
-		<br>
-		<a class="btn btn-secondary" href="login.jsp">Logout</a>
 		<br>
 		<br>
 		<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Admins</h1>
@@ -88,9 +123,9 @@ th {
 		</table>
 	</div>
 	<div class="container">
-		<table border="1" cellpadding="6">
 			<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Bill Details</h1>
 			<br>
+		<table border="1" cellpadding="6">
 			<tr>
 				<th>Bill ID</th>
 				<th>Order ID</th>
@@ -112,9 +147,9 @@ th {
 		</table>
 	</div>
 	<div class="container">
-		<table border="1" cellpadding="6">
 			<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Clients</h1>
 			<br>
+		<table border="1" cellpadding="6">
 			<tr>
 				<th>Client ID</th>
 				<th>First Name</th>
@@ -138,9 +173,9 @@ th {
 		</table>
 	</div>
 	<div class="container">
-		<table border="1" cellpadding="6">
 			<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Order Details</h1>
 			<br>
+		<table border="1" cellpadding="6">
 			<tr>
 				<th>Order ID</th>
 				<th>Quote ID</th>
@@ -158,9 +193,9 @@ th {
 		</table>
 	</div>
 	<div class="container">
-		<table border="1" cellpadding="6">
 			<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Quotes</h1>
 			<br>
+		<table border="1" cellpadding="6">
 			<tr>
 				<th>Quote ID</th>
 				<th>Request ID</th>
@@ -184,9 +219,9 @@ th {
 		</table>
 	</div>
 	 <div class="container">
-		<table border="1" cellpadding="6">
-			<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Tree Information</h1>
+	 		<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Tree Information</h1>
 			<br>
+		<table border="1" cellpadding="6">
 			<tr>
 				<th>Tree Info ID</th>
 				<th>Request ID</th>
@@ -208,9 +243,9 @@ th {
 		</table>
 	</div>
 	<div class="container">
-		<table border="1" cellpadding="6">
 			<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Tree Pictures</h1>
 			<br>
+		<table border="1" cellpadding="6">
 			<tr>
 				<th>Picture ID</th>
 				<th>Picture URL</th>
@@ -226,9 +261,9 @@ th {
 		</table>
 	</div>
 	<div class="container">
-		<table border="1" cellpadding="6">
 			<h1 class="display-4 font-weight-bold-italic text-center" style="color: #000000; text-shadow: 2px 2px 4px #ffffff; font-family: Brush Script MT, Brush Script Std, cursive;">List of Tree Requests</h1>
 			<br>
+		<table border="1" cellpadding="6">
 			<tr>
 				<th>Request ID</th>
 				<th>Client ID</th>
@@ -247,5 +282,70 @@ th {
 			</c:forEach>
 		</table>
 	</div>
+	<div class="container d-none">
+    <form id="bigClientsForm" action="listBigClients.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="bigClients">
+    </form>
+	</div>
+	<div class="container d-none">
+    <form id="easyClientsForm" action="listeasyClients.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="easyClients">
+    </form>
+	</div>
+	<div class="container d-none">
+    <form id="oneTreeQuoteForm" action="listOneTreeQuotes.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="oneTreeQuotes">
+    </form>
+	</div>
+	<div class="container d-none">
+    <form id="prospectiveClientsForm" action="listProspectiveClients.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="prospectiveClients">
+    </form>
+	</div>
+	<div class="container d-none">
+    <form id="highestTreeForm" action="listHighestTree.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="highestTree">
+    </form>
+	</div>
+
+<script>
+    $(document).ready(function () {
+        $("#bigClientsLink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#bigClientsForm").submit();
+        });
+        
+        $("#easyClientslink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#easyClientsForm").submit();
+        });
+        
+        $("#oneTreeQuoteslink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#oneTreeQuoteForm").submit();
+        });
+        
+        $("#prospectiveClientslink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#prospectiveClientsForm").submit();
+        });
+        
+        $("#highestTreelink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#highestTreeForm").submit();
+        });
+    });
+</script>
+
 </body>
 </html>

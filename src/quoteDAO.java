@@ -166,7 +166,7 @@ public class quoteDAO
     
     public void updateQuote(String quoteID, double price, String status, String note) throws SQLException {
         try {
-            connect_func("root", "Root*1234");
+        	connect_func("root","Root*1234");
 
             String sql = "UPDATE quote SET Price = ?, Status = ?, Note = ? WHERE QuoteID = ?";
             preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
@@ -192,7 +192,7 @@ public class quoteDAO
     {
         try
         {
-            connect_func("root", "Root*1234");
+        	connect_func("root","Root*1234");
 
             String sql = "UPDATE quote SET Price = ?, Status = ?, Note = ? WHERE QuoteID = ?";
             preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
@@ -246,7 +246,7 @@ public class quoteDAO
 		String status = "Denied";
 		 try
 	        {
-	            connect_func("root", "Root*1234");
+			 connect_func("root","Root*1234");
 
 	            String sql = "UPDATE quote SET Status = ? WHERE QuoteID = ?";
 	            preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
@@ -270,7 +270,7 @@ public class quoteDAO
 	    String status = "Approved";
 		 try
 	        {
-			 	connect_func("root", "Root*1234");
+			 connect_func("root","Root*1234");
 			  // Update the quote status
 		        String updateQuoteStatusSQL = "UPDATE quote SET Status = ? WHERE QuoteID = ?";
 		        preparedStatement = connect.prepareStatement(updateQuoteStatusSQL);

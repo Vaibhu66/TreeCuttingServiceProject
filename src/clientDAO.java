@@ -95,6 +95,355 @@ public class clientDAO
         return listClient;
     }
     
+    public List<clientwithTreeinfo> listBigClient() throws SQLException {
+    	//System.out.println("inside admin");
+        List<clientwithTreeinfo> listbigClient = new ArrayList<>();        
+        String sql = "SELECT\n"
+        		+ "    c.ClientID,\n"
+        		+ "    c.FirstName,\n"
+        		+ "    c.LastName,\n"
+        		+ "    c.Address,\n"
+        		+ "    c.PhoneNumber,\n"
+        		+ "    c.Email,\n"
+        		+ "    MAX(q.QuoteID) AS QuoteID,\n"
+        		+ "    MAX(tr.RequestID) AS RequestID,\n"
+        		+ "    MAX(t.TreeinfoID) AS TreeinfoID,\n"
+        		+ "    MAX(od.OrderID) AS OrderID,\n"
+        		+ "    MAX(t.Height) AS Height,\n"
+        		+ "    MAX(nt.NumberOfTrees) AS NumberOfTrees\n"
+        		+ "FROM\n"
+        		+ "    client c\n"
+        		+ "JOIN\n"
+        		+ "    treerequest tr ON c.ClientID = tr.ClientID\n"
+        		+ "JOIN\n"
+        		+ "    quote q ON tr.RequestID = q.RequestID\n"
+        		+ "JOIN\n"
+        		+ "    treeinformation t ON q.RequestID = t.RequestID\n"
+        		+ "LEFT JOIN\n"
+        		+ "    orderdetails od ON q.QuoteID = od.QuoteID\n"
+        		+ "JOIN\n"
+        		+ "    (\n"
+        		+ "        SELECT\n"
+        		+ "            tr.ClientID,\n"
+        		+ "            COUNT(DISTINCT tr.RequestID) AS NumberOfTrees\n"
+        		+ "        FROM\n"
+        		+ "            treerequest tr\n"
+        		+ "        GROUP BY\n"
+        		+ "            tr.ClientID\n"
+        		+ "        HAVING\n"
+        		+ "            NumberOfTrees > 0\n"
+        		+ "    ) nt ON c.ClientID = nt.ClientID\n"
+        		+ "WHERE\n"
+        		+ "    nt.NumberOfTrees = (\n"
+        		+ "        SELECT\n"
+        		+ "            MAX(NumberOfTrees)\n"
+        		+ "        FROM\n"
+        		+ "            (\n"
+        		+ "                SELECT\n"
+        		+ "                    COUNT(DISTINCT tr.RequestID) AS NumberOfTrees\n"
+        		+ "                FROM\n"
+        		+ "                    treerequest tr\n"
+        		+ "                GROUP BY\n"
+        		+ "                    tr.ClientID\n"
+        		+ "                HAVING\n"
+        		+ "                    NumberOfTrees > 0\n"
+        		+ "            ) subquery\n"
+        		+ "    )\n"
+        		+ "GROUP BY\n"
+        		+ "    c.ClientID, c.FirstName, c.LastName, c.Address, c.PhoneNumber, c.Email\n"
+        		+ "ORDER BY\n"
+        		+ "    NumberOfTrees DESC\n";
+        
+      try  {
+    	  connect_func("root","Root*1234");      
+    	  statement = (Statement) connect.createStatement();
+    	  ResultSet resultSet = statement.executeQuery(sql);
+         
+        while (resultSet.next()) {
+        	String clientID = resultSet.getString("ClientID");
+        	String firstName = resultSet.getString("FirstName");
+        	String lastName = resultSet.getString("LastName");
+        	String address = resultSet.getString("Address");
+        	String phoneNumber = resultSet.getString("PhoneNumber");
+        	String email = resultSet.getString("Email");
+        	String quoteID = resultSet.getString("QuoteID");
+        	String requestID = resultSet.getString("RequestID");
+        	String treeinfoID = resultSet.getString("TreeinfoID");
+        	String orderID = resultSet.getString("OrderID");
+            double height = resultSet.getDouble("Height");
+            int numberOfTrees = resultSet.getInt("NumberOfTrees");
+        	
+        	clientwithTreeinfo bigclients = new clientwithTreeinfo(clientID, firstName, lastName, address, phoneNumber, email, quoteID, requestID, treeinfoID, orderID, height, numberOfTrees);
+
+            listbigClient.add(bigclients);
+        }
+        System.out.println(listbigClient);
+        resultSet.close();
+      } catch(SQLException e) {
+    	  e.printStackTrace();
+      }
+        disconnect();        
+        return listbigClient;
+    }
+    
+    public List<clientwithTreeinfo> oneTreeQuote() throws SQLException {
+    	//System.out.println("inside admin");
+        List<clientwithTreeinfo> onetreequote = new ArrayList<>();        
+        String sql = "SELECT\n"
+        		+ "    c.ClientID,\n"
+        		+ "    c.FirstName,\n"
+        		+ "    c.LastName,\n"
+        		+ "    c.Address,\n"
+        		+ "    c.PhoneNumber,\n"
+        		+ "    c.Email,\n"
+        		+ "    MAX(q.QuoteID) AS QuoteID,\n"
+        		+ "    MAX(tr.RequestID) AS RequestID,\n"
+        		+ "    MAX(t.TreeinfoID) AS TreeinfoID,\n"
+        		+ "    MAX(od.OrderID) AS OrderID,\n"
+        		+ "    MAX(t.Height) AS Height,\n"
+        		+ "    MAX(nt.NumberOfTrees) AS NumberOfTrees\n"
+        		+ "FROM\n"
+        		+ "    client c\n"
+        		+ "JOIN\n"
+        		+ "    treerequest tr ON c.ClientID = tr.ClientID\n"
+        		+ "JOIN\n"
+        		+ "    quote q ON tr.RequestID = q.RequestID\n"
+        		+ "JOIN\n"
+        		+ "    treeinformation t ON q.RequestID = t.RequestID\n"
+        		+ "LEFT JOIN\n"
+        		+ "    orderdetails od ON q.QuoteID = od.QuoteID\n"
+        		+ "JOIN\n"
+        		+ "    (\n"
+        		+ "        SELECT\n"
+        		+ "            tr.ClientID,\n"
+        		+ "            COUNT(DISTINCT tr.RequestID) AS NumberOfTrees\n"
+        		+ "        FROM\n"
+        		+ "            treerequest tr\n"
+        		+ "        GROUP BY\n"
+        		+ "            tr.ClientID\n"
+        		+ "        HAVING\n"
+        		+ "            NumberOfTrees = 1  -- Only one tree involved\n"
+        		+ "    ) nt ON c.ClientID = nt.ClientID\n"
+        		+ "WHERE\n"
+        		+ "    q.Status IN ('Approved', 'Accepted')  -- Consider both Approved and Accepted quotes\n"
+        		+ "GROUP BY\n"
+        		+ "    c.ClientID, c.FirstName, c.LastName, c.Address, c.PhoneNumber, c.Email\n"
+        		+ "ORDER BY\n"
+        		+ "    NumberOfTrees DESC\n";
+        
+      try  {
+    	  connect_func("root","Root*1234");      
+    	  statement = (Statement) connect.createStatement();
+    	  ResultSet resultSet = statement.executeQuery(sql);
+         
+        while (resultSet.next()) {
+        	String clientID = resultSet.getString("ClientID");
+        	String firstName = resultSet.getString("FirstName");
+        	String lastName = resultSet.getString("LastName");
+        	String address = resultSet.getString("Address");
+        	String phoneNumber = resultSet.getString("PhoneNumber");
+        	String email = resultSet.getString("Email");
+        	String quoteID = resultSet.getString("QuoteID");
+        	String requestID = resultSet.getString("RequestID");
+        	String treeinfoID = resultSet.getString("TreeinfoID");
+        	String orderID = resultSet.getString("OrderID");
+            double height = resultSet.getDouble("Height");
+            int numberOfTrees = resultSet.getInt("NumberOfTrees");
+        	
+        	clientwithTreeinfo onetreequoteclients = new clientwithTreeinfo(clientID, firstName, lastName, address, phoneNumber, email, quoteID, requestID, treeinfoID, orderID, height, numberOfTrees);
+
+        	onetreequote.add(onetreequoteclients);
+        }
+        System.out.println(onetreequote);
+        resultSet.close();
+      } catch(SQLException e) {
+    	  e.printStackTrace();
+      }
+        disconnect();        
+        return onetreequote;
+    }
+    
+    public List<clientwithTreeinfo> listEasyClient() throws SQLException {
+    	//System.out.println("inside admin");
+        List<clientwithTreeinfo> listeasyClient = new ArrayList<>();        
+        String sql = "SELECT DISTINCT c.ClientID, c.FirstName, c.LastName, c.Address, c.PhoneNumber, c.Email\n"
+        		+ "FROM client c\n"
+        		+ "JOIN treerequest tr ON c.ClientID = tr.ClientID\n"
+        		+ "JOIN quote q ON tr.RequestID = q.RequestID\n"
+        		+ "WHERE q.Status IN ('accepted', 'approved')\n"
+        		+ "  AND q.Note = 'Initial quote' -- Additional criteria for the 'Note' field\n"
+        		+ "  AND c.ClientID NOT IN (\n"
+        		+ "    SELECT c2.ClientID\n"
+        		+ "    FROM client c2\n"
+        		+ "    JOIN treerequest tr2 ON c2.ClientID = tr2.ClientID\n"
+        		+ "    JOIN quote q2 ON tr2.RequestID = q2.RequestID\n"
+        		+ "    WHERE q2.Status = 'negotiating'\n"
+        		+ "  )\n";
+        
+      try  {
+    	  connect_func("root","Root*1234");      
+    	  statement = (Statement) connect.createStatement();
+    	  ResultSet resultSet = statement.executeQuery(sql);
+         
+        while (resultSet.next()) {
+        	String clientID = resultSet.getString("ClientID");
+        	String firstName = resultSet.getString("FirstName");
+        	String lastName = resultSet.getString("LastName");
+        	String address = resultSet.getString("Address");
+        	String phoneNumber = resultSet.getString("PhoneNumber");
+        	String email = resultSet.getString("Email");
+        	
+        	clientwithTreeinfo easyclients = new clientwithTreeinfo(clientID, firstName, lastName, address, phoneNumber, email);
+
+            listeasyClient.add(easyclients);
+        }
+        System.out.println(listeasyClient);
+        resultSet.close();
+      } catch(SQLException e) {
+    	  e.printStackTrace();
+      }
+        disconnect();        
+        return listeasyClient;
+    }
+    
+    public List<clientwithTreeinfo> listProspectiveClient() throws SQLException {
+    	//System.out.println("inside admin");
+        List<clientwithTreeinfo> listprospectiveClient = new ArrayList<>();        
+        String sql = "SELECT\n"
+        		+ "    c.ClientID,\n"
+        		+ "    c.FirstName,\n"
+        		+ "    c.LastName,\n"
+        		+ "    c.Address,\n"
+        		+ "    c.PhoneNumber,\n"
+        		+ "    c.Email,\n"
+        		+ "    MAX(q.QuoteID) AS QuoteID\n"
+        		+ "FROM\n"
+        		+ "    client c\n"
+        		+ "JOIN\n"
+        		+ "    treerequest tr ON c.ClientID = tr.ClientID\n"
+        		+ "JOIN\n"
+        		+ "    quote q ON tr.RequestID = q.RequestID\n"
+        		+ "LEFT JOIN\n"
+        		+ "    orderdetails od ON q.QuoteID = od.QuoteID\n"
+        		+ "WHERE\n"
+        		+ "    od.QuoteID IS NULL\n"
+        		+ "GROUP BY\n"
+        		+ "    c.ClientID, c.FirstName, c.LastName, c.Address, c.PhoneNumber, c.Email\n"
+        		+ "ORDER BY\n"
+        		+ "    QuoteID DESC\n";
+        
+      try  {
+    	  connect_func("root","Root*1234");      
+    	  statement = (Statement) connect.createStatement();
+    	  ResultSet resultSet = statement.executeQuery(sql);
+         
+        while (resultSet.next()) {
+        	String clientID = resultSet.getString("ClientID");
+        	String firstName = resultSet.getString("FirstName");
+        	String lastName = resultSet.getString("LastName");
+        	String address = resultSet.getString("Address");
+        	String phoneNumber = resultSet.getString("PhoneNumber");
+        	String email = resultSet.getString("Email");
+        	String quoteID = resultSet.getString("QuoteID");
+        	
+        	clientwithTreeinfo prosclients = new clientwithTreeinfo(clientID, firstName, lastName, address, phoneNumber, email, quoteID);
+
+        	listprospectiveClient.add(prosclients);
+        }
+        System.out.println(listprospectiveClient);
+        resultSet.close();
+      } catch(SQLException e) {
+    	  e.printStackTrace();
+      }
+        disconnect();        
+        return listprospectiveClient;
+    }
+    
+    public List<clientwithTreeinfo> listHighestTree() throws SQLException {
+    	//System.out.println("inside admin");
+        List<clientwithTreeinfo> listhighestTree = new ArrayList<>();        
+        String sql = "WITH TreeData AS (\n"
+        		+ "    SELECT\n"
+        		+ "        c.ClientID,\n"
+        		+ "        c.FirstName,\n"
+        		+ "        c.LastName,\n"
+        		+ "        c.Address,\n"
+        		+ "        c.PhoneNumber,\n"
+        		+ "        c.Email,\n"
+        		+ "        q.QuoteID,\n"
+        		+ "        tr.RequestID,\n"
+        		+ "        t.TreeinfoID,\n"
+        		+ "        od.OrderID,\n"
+        		+ "        t.Height,\n"
+        		+ "        ROW_NUMBER() OVER (PARTITION BY c.ClientID ORDER BY t.Height DESC) AS RowNum\n"
+        		+ "    FROM\n"
+        		+ "        client c\n"
+        		+ "    JOIN\n"
+        		+ "        treerequest tr ON c.ClientID = tr.ClientID\n"
+        		+ "    JOIN\n"
+        		+ "        quote q ON tr.RequestID = q.RequestID\n"
+        		+ "    JOIN\n"
+        		+ "        treeinformation t ON q.RequestID = t.RequestID\n"
+        		+ "    LEFT JOIN\n"
+        		+ "        orderdetails od ON q.QuoteID = od.QuoteID\n"
+        		+ "    WHERE\n"
+        		+ "        od.Status = 'Completed'\n"
+        		+ ")\n"
+        		+ ", MaxHeight AS (\n"
+        		+ "    SELECT\n"
+        		+ "        MAX(Height) AS MaxHeight\n"
+        		+ "    FROM\n"
+        		+ "        TreeData\n"
+        		+ ")\n"
+        		+ "SELECT\n"
+        		+ "    ClientID,\n"
+        		+ "    FirstName,\n"
+        		+ "    LastName,\n"
+        		+ "    Address,\n"
+        		+ "    PhoneNumber,\n"
+        		+ "    Email,\n"
+        		+ "    QuoteID,\n"
+        		+ "    RequestID,\n"
+        		+ "    TreeinfoID,\n"
+        		+ "    OrderID,\n"
+        		+ "    Height\n"
+        		+ "FROM\n"
+        		+ "    TreeData\n"
+        		+ "WHERE\n"
+        		+ "    RowNum = 1\n"
+        		+ "    AND Height = (SELECT MaxHeight FROM MaxHeight)\n";
+        
+      try  {
+    	  connect_func("root","Root*1234");      
+    	  statement = (Statement) connect.createStatement();
+    	  ResultSet resultSet = statement.executeQuery(sql);
+         
+        while (resultSet.next()) {
+        	String clientID = resultSet.getString("ClientID");
+        	String firstName = resultSet.getString("FirstName");
+        	String lastName = resultSet.getString("LastName");
+        	String address = resultSet.getString("Address");
+        	String phoneNumber = resultSet.getString("PhoneNumber");
+        	String email = resultSet.getString("Email");
+        	String quoteID = resultSet.getString("QuoteID");
+        	String requestID = resultSet.getString("RequestID");
+        	String treeinfoID = resultSet.getString("TreeinfoID");
+        	String orderID = resultSet.getString("OrderID");
+            double height = resultSet.getDouble("Height");
+        	
+        	clientwithTreeinfo highT = new clientwithTreeinfo(clientID, firstName, lastName, address, phoneNumber, email, quoteID, requestID, treeinfoID, orderID, height);
+
+        	listhighestTree.add(highT);
+        }
+        System.out.println(listhighestTree);
+        resultSet.close();
+      } catch(SQLException e) {
+    	  e.printStackTrace();
+      }
+        disconnect();        
+        return listhighestTree;
+    }
+    
     public void insert(client client) throws SQLException {
     	System.out.println("Inside insert client");
     	connect_func("root","Root*1234");
