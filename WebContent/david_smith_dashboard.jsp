@@ -40,6 +40,10 @@
             padding: 20px;
             border-radius:10px;
         }
+        #quotesTable
+        {
+        margin-right: 300px;
+        }
     </style>
 </head>
 <body>
@@ -53,9 +57,6 @@
             <a href="login.jsp" class="btn btn-danger">Logout</a>
         </div>
 
-        <div class="text-center mt-3">
-            <p>You can find the complete list of transactions and other attributes here like balance, name of the users, list of quotes filed, etc.</p>
-        </div>
         <br>
         <form action="QuoteListforDavid" method="post" id="QuoteTab">
         <div class="container">
