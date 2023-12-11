@@ -92,6 +92,10 @@ th {
           <a class="dropdown-item" href="#" id="oneTreeQuoteslink">One tree Quotes</a>
           <a class="dropdown-item" href="#" id="prospectiveClientslink">Prospective Clients</a>
           <a class="dropdown-item" href="#" id="highestTreelink">Highest Tree</a>
+	  <a class="dropdown-item" href="#" id="OverDueBillslink">OverDueBills</a>
+          <a class="dropdown-item" href="#" id="BadClientslink">Bad Clients</a>
+          <a class="dropdown-item" href="#" id="GoodClientslink">Good Clients</a>
+          <a class="dropdown-item" href="#" id="Statisticslink">Statistics</a>
         </div>
       </li>
     </ul>
@@ -307,6 +311,26 @@ th {
         <input type="hidden" name="dashboardOption" value="highestTree">
     </form>
 	</div>
+		<div class="container d-none">
+    <form id="OverDueBillsForm" action="OverDueBills.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="OverDueBills">
+    </form>
+	</div>
+	<div class="container d-none">
+    <form id="BadClientsForm" action="BadClients.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="BadClients">
+    </form>
+	</div>
+	<div class="container d-none">
+    <form id="GoodClientsForm" action="GoodClients.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="GoodClients">
+    </form>
+	</div>
+	<div class="container d-none">
+    <form id="StatisticsForm" action="Statistics.jsp" method="post">
+        <input type="hidden" name="dashboardOption" value="Statistics">
+    </form>
+	</div>
 
 <script>
     $(document).ready(function () {
@@ -343,6 +367,34 @@ th {
 
             // Submit the form
             $("#highestTreeForm").submit();
+        });
+	
+	 $("#OverDueBillslink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#OverDueBillsForm").submit();
+        });
+        
+        $("#BadClientslink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#BadClientsForm").submit();
+        });
+        
+        $("#GoodClientslink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#GoodClientsForm").submit();
+        });
+        
+        $("#Statisticslink").click(function (e) {
+            e.preventDefault();
+
+            // Submit the form
+            $("#StatisticsForm").submit();
         });
     });
 </script>
